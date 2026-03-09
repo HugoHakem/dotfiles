@@ -2,7 +2,7 @@
 
 This repository is a lightweight, rootless alternative to my declarative [NixOS configuration](https://github.com/HugoHakem/nix-os.config). It is specifically designed for High-Performance Computing (HPC) clusters or any environment where I lack `sudo` access.
 
-It uses **Pixi** for user-space package management and **Chezmoi** for dotfile templating and deployment.
+It uses [Pixi](https://pixi.prefix.dev/dev/deployment/pixi_pack/) for user-space package management and [Chezmoi](https://www.chezmoi.io/) for dotfile templating and deployment.
 
 ## 📥 Quick Install
 
@@ -19,9 +19,9 @@ Managed entirely in user-space via `pixi global`:
 + `starship` - Cross-shell prompt
 + `direnv` - Directory-specific environments
 + `bat` - A `cat` clone with syntax highlighting
-+ `htop`
-+ `tree`
-+ `tldr`
++ `htop` - Interactive process viewer and system monitor
++ `tree` - Visual, depth-indented directory lister
++ `tldr` - Simplified, practical man pages with quick command examples
 
 ## 📂 Repository Structure
 
@@ -70,5 +70,5 @@ git push
 
 ## 📋 TO-DO
 
-+ [ ] #1
-+ [ ] #2
++ [ ] HugoHakem/dotfiles#1
++ [ ] HugoHakem/dotfiles#2
