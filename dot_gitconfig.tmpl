@@ -1,0 +1,36 @@
+[user]
+    # Chezmoi will automatically inject the answers you provided during 'chezmoi init'
+    name = {{ .name | quote }}
+    email = {{ .email | quote }}
+
+[init]
+    # This ensures 'git init' creates 'main' instead of 'master'
+    defaultBranch = main
+
+[filter "lfs"]
+    # Configures Git LFS to automatically intercept and manage large files to prevent repository bloat
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[core]
+    editor = vim
+    autocrlf = input
+
+[pull]
+    # Modern standard: Prevents messy merge commits when you 'git pull'
+    rebase = true
+
+[push]
+    # Automatically sets the upstream branch when you push for the first time
+    autoSetupRemote = true
+
+[rebase]
+    # tomatically create a temporary stash entry before the operation begins, 
+    # and apply it after the operation ends. This means that you can run rebase on a dirty worktree.
+    autostash = true
+
+[color]
+    # Ensures Git output looks good in your terminal
+    ui = auto

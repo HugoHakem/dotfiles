@@ -1,0 +1,22 @@
+{{- $name := promptStringOnce . "name" "Git Username" -}}
+{{- $email := promptStringOnce . "email" "Git Email address" -}}
+
+[data]
+    # Git user information
+    name = {{ $name | quote }}
+    email = {{ $email | quote }}
+
+[edit]
+    command = "code"
+    args = ["--wait"]
+
+[diff]
+    command = "code"
+    args = ["--wait", "--diff"]
+
+[merge]
+    command = "bash"
+    args = [
+        "-c",
+        "cp '{{ `{{ .Target }}` }}' '{{ `{{ .Target }}` }}.base' && code --new-window --wait --merge '{{ `{{ .Destination }}` }}' '{{ `{{ .Target }}` }}' '{{ `{{ .Target }}` }}.base' '{{ `{{ .Source }}` }}'",
+    ]

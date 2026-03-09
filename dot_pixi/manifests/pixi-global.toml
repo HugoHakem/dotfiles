@@ -1,0 +1,36 @@
+version = 1
+
+[envs.chezmoi]
+channels = ["conda-forge"]
+dependencies = { chezmoi = "*" }
+exposed = { chezmoi = "chezmoi" }
+
+[envs.starship]
+channels = ["conda-forge"]
+dependencies = { starship = "*" }
+exposed = { starship = "starship" }
+
+[envs.htop]
+channels = ["conda-forge"]
+dependencies = { htop = "*" }
+exposed = { htop = "htop" }
+
+[envs.tree]
+channels = ["conda-forge"]
+dependencies = { tree = "*" }
+exposed = { tree = "tree" }
+
+[envs.tldr]
+channels = ["conda-forge"]
+dependencies = { tldr = "*" }
+exposed = { tldr = "tldr" }
+
+[envs.direnv]
+channels = ["conda-forge"]
+dependencies = { direnv = "*" }
+exposed = { direnv = "direnv" }
+
+[envs.bat]
+channels = ["conda-forge"]
+dependencies = { bat = "*" }
+exposed = { bat = "bat" }

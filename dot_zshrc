@@ -1,0 +1,90 @@
+# ~/.zshrc
+
+# ==============================================================================
+# 0. Source Global Definitions (Crucial for HPC / SLURM modules)
+# ==============================================================================
+# Sourcing /etc/bashrc in Zsh will often cause syntax errors. 
+# HPC admins usually provide a Zsh equivalent.
+if [ -f /etc/zshrc ]; then
+    source /etc/zshrc
+elif [ -f /etc/zsh/zshrc ]; then
+    source /etc/zsh/zshrc
+fi
+
+## User specific environment
+if [[ "$PATH" != *"$HOME/.local/bin:$HOME/bin:"* ]]; then
+    export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+
+# ==============================================================================
+# 1. PATH & Environment Variables
+# ==============================================================================
+# Add Pixi's binary folder to your PATH
+export PATH="$HOME/.pixi/bin:$PATH"
+
+# ==============================================================================
+# 2. History Control (Translated to Zsh)
+# ==============================================================================
+# Zsh requires you to explicitly set where history is saved
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+# Equivalent to bash's HISTCONTROL=ignoreboth
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_DUPS
+
+# Equivalent to bash's HISTIGNORE="pwd:ls:cd"
+export HISTORY_IGNORE="(pwd|ls|cd)"
+
+# ==============================================================================
+# 3. Aliases & Functions
+# ==============================================================================
+alias ls="ls --color=auto"
+
+# Color help using bat 
+function bathelp() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: bathelp <command> [subcommands...]"
+    return 1
+  fi
+  "$@" --help 2>&1 | bat --language=help
+}
+# Note: 'export -f bathelp' was removed because Zsh does not support exporting 
+# functions to subshells like Bash does. The function is still globally available in Zsh.
+
+# ==============================================================================
+# 4. Prompt, Completions & Shell Integrations
+# ==============================================================================
+# Zsh's native, powerful completion system (Replaces bash_completion)
+autoload -Uz compinit
+compinit
+
+# Initialize Starship prompt for Zsh
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# Initialize direnv for Zsh
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
+# ==============================================================================
+# 5. VS Code / Direnv Workaround
+# ==============================================================================
+# This is a workaround to make direnv work with VS Code's integrated terminal
+# when using the direnv extension, by making sure to reload
+# the environment the first time terminal is opened.
+#
+# See: 
+# - https://github.com/direnv/direnv-vscode/issues/561#issuecomment-1837462994.
+# - https://github.com/direnv/direnv-vscode/issues/561#issuecomment-1991534148
+#
+# The variable VSCODE_INJECTION is apparently set by VS Code itself, and this is how
+# we can detect if we're running inside the VS Code terminal or not.
+if [[ -n "$VSCODE_INJECTION" && -z "$VSCODE_TERMINAL_DIRENV_LOADED" && -f .envrc ]]; then
+  cd ..
+  cd ~-
+  export VSCODE_TERMINAL_DIRENV_LOADED=1
+fi
