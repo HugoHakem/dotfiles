@@ -34,3 +34,8 @@ exposed = { direnv = "direnv" }
 channels = ["conda-forge"]
 dependencies = { bat = "*" }
 exposed = { bat = "bat" }
+
+[envs.uv]
+channels = ["conda-forge"]
+dependencies = { uv = "*" }
+exposed = { uv = "uv", uvx = "uvx" }

@@ -22,6 +22,7 @@ Managed entirely in user-space via `pixi global`:
 + `htop` - Interactive process viewer and system monitor
 + `tree` - Visual, depth-indented directory lister
 + `tldr` - Simplified, practical man pages with quick command examples
++ `uv` - fast Python package and project manager, written in Rust (used by Pixi under the hood).
 
 ## 📂 Repository Structure
 
