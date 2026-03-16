@@ -41,6 +41,8 @@ export HISTORY_IGNORE="(pwd|ls|cd)"
 # 3. Aliases & Functions
 # ==============================================================================
 alias ls="ls --color=auto"
+alias srun-tmpl='echo "srun -t 8:00:00 --job-name=delphi --cpus-per-task=16 --mem=64G --gpus=1 --pty bash"'
+
 
 # Color help using bat 
 function bathelp() {
@@ -50,6 +52,7 @@ function bathelp() {
   fi
   "$@" --help 2>&1 | bat --language=help
 }
+
 # Note: 'export -f bathelp' was removed because Zsh does not support exporting 
 # functions to subshells like Bash does. The function is still globally available in Zsh.
 

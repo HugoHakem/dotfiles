@@ -31,6 +31,7 @@ export HISTIGNORE="pwd:ls:cd"
 # 3. Aliases & Functions
 # ==============================================================================
 alias ls="ls --color=auto"
+alias srun-tmpl='echo "srun -t 8:00:00 --job-name=delphi --cpus-per-task=16 --mem=64G --gpus=1 --pty bash"'
 
 # Color help using bat (Make sure to add 'bat' to your pixi-global.toml!)
 function bathelp() {
