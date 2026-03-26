@@ -91,3 +91,8 @@ if [[ -n "$VSCODE_INJECTION" && -z "$VSCODE_TERMINAL_DIRENV_LOADED" && -f .envrc
   cd ~-
   export VSCODE_TERMINAL_DIRENV_LOADED=1
 fi
+
+# Change cache dir for Pixi and Uv to not clutter the local dir on the HPC
+export UV_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/uv"
+export PIXI_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/pixi"
+export RATTLER_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/rattler"

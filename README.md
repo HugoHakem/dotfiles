@@ -69,6 +69,13 @@ git commit -m "chore: update pixi global manifest"
 git push
 ```
 
+## Package Cache Storage
+
+The Cache storage in the HPC is changed from the $HOME dir default as on the HPC there is not much space allocated for individual user $HOME. Change the line here:
+
++ [dot_bashrc](./dot_bashrc#L85-L88).
++ [dot_zshrc](./dot_bashrc#L95-L98)
+
 ## 📋 TO-DO
 
 + [ ] HugoHakem/dotfiles#1
