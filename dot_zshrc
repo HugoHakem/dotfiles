@@ -41,8 +41,6 @@ export HISTORY_IGNORE="(pwd|ls|cd)"
 # 3. Aliases & Functions
 # ==============================================================================
 alias ls="ls --color=auto"
-alias srun-tmpl='echo "srun -t 8:00:00 --job-name=delphi --cpus-per-task=16 --mem=64G --gpus=1 --pty bash"'
-
 
 # Color help using bat 
 function bathelp() {
@@ -96,3 +94,9 @@ fi
 export UV_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/uv"
 export PIXI_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/pixi"
 export RATTLER_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/rattler"
+
+# ==============================================================================
+# 4. SLURM utils
+# ==============================================================================
+
+source ~/shell_utils/zsh/slurm_functions.sh
