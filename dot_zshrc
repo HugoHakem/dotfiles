@@ -91,9 +91,9 @@ if [[ -n "$VSCODE_INJECTION" && -z "$VSCODE_TERMINAL_DIRENV_LOADED" && -f .envrc
 fi
 
 # Change cache dir for Pixi and Uv to not clutter the local dir on the HPC
-export UV_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/uv"
-export PIXI_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/pixi"
-export RATTLER_CACHE_DIR="/hps/software/users/saezrodriguez/hakem/.cache/rattler"
+export UV_CACHE_DIR="/nfs/research/saezrodriguez/hakem/.cache/uv"
+export PIXI_CACHE_DIR="/nfs/research/saezrodriguez/hakem/.cache/pixi"
+export RATTLER_CACHE_DIR="/nfs/research/saezrodriguez/hakem/.cache/rattler"
 
 # ==============================================================================
 # 4. SLURM utils
