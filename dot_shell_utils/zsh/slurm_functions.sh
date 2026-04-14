@@ -93,18 +93,17 @@ sarray_params () {
            --mem=$slurm_mem \
            -c $slurm_cpus \
            $gpu_args \
-           --export=ALL,SCRIPT="$script",PARAMS_FILE="$params",SEP="$sep",FIXED_ARGS="${(j: :)fixed_args}"
-    cat <<'EOF' | sbatch --parsable
+           --export=ALL,SCRIPT="$script",PARAMS_FILE="$params",SEP="$sep",FIXED_ARGS="${(j: :)fixed_args}" <<'EOF'
 #!/bin/bash
 header=$(head -n1 "$PARAMS_FILE")
 IFS="$SEP" read -r -a cols <<< "$header"
 line=$(awk -F"$SEP" -v i=$SLURM_ARRAY_TASK_ID 'NR==i+1' "$PARAMS_FILE")
-IFS="$SEP" read -r "${(j: :)cols[@]}" <<< "$line"
+IFS="$SEP" read -r "${cols[@]}" <<< "$line"
 
-local -a args=()
+args=()
 for col in "${cols[@]}"; do
-    val=$(echo "${(P)col}" | xargs)
-    if [[ -n "$val" ]]; then
+    val=$(echo "${!col}" | xargs)
+    if [ -n "$val" ]; then
         args+=("--$col" "$val")
     fi
 done
