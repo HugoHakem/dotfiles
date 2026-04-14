@@ -4,7 +4,7 @@ alias srun-tmpl='echo "srun -t 8:00:00 --job-name=delphi --cpus-per-task=16 --me
 
 sarray_params () {
     if [[ $# -lt 2 ]]; then
-        echo "Usage: sarray_params <script.py> <params.tsv/csv> [--dry-run] [--time=HH:MM:SS] [--mem=XXG] [--cpus=N] [--gpus=N|--gpu-type=TYPE] [--max-parallel=N] [extra args]"
+        echo "Usage: sarray_params <script.py> <params.tsv/csv> [--dry-run] [--time=HH:MM:SS] [--mem=XXG] [--cpus=N] [--gpus=N|--gpu-type=TYPE] [--max-parallel=N] [--output-dir=DIR] [extra args]"
         return 1
     fi
 
@@ -20,6 +20,7 @@ sarray_params () {
     local slurm_gpus=""
     local slurm_gpu_type=""
     local max_parallel=""
+    local output_dir="outputs"
     local -a fixed_args=()
 
     # Parse optional arguments
@@ -39,6 +40,8 @@ sarray_params () {
                 slurm_gpu_type="${arg#*=}" ;;
             --max-parallel=*)
                 max_parallel="%${arg#*=}" ;;
+            --output-dir=*)
+                output_dir="${arg#*=}" ;;
             *)
                 fixed_args+=("$arg") ;;
         esac
@@ -83,7 +86,8 @@ sarray_params () {
     fi
 
     # Actual submission
-    sbatch --output=slurm-%A_%a.out \
+    mkdir -p "$output_dir"
+    sbatch --output="${output_dir}/slurm-%A_%a.out" \
            --array=1-$n$max_parallel \
            --time=$slurm_time \
            --mem=$slurm_mem \
