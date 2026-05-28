@@ -16,6 +16,14 @@ fi
 # ==============================================================================
 # Add Pixi's binary folder to your PATH
 export PATH="$HOME/.pixi/bin:$PATH"
+# install codex through npm
+export PATH="$PATH:$HOME/.pixi/envs/nodejs/bin"
+# GitHub MCP token for Codex CLI.
+# The token itself lives in ~/.config/agents/github_pat.env,
+# which is created locally and not committed.
+if [ -r "$HOME/.config/agents/github_pat.env" ]; then
+  . "$HOME/.config/agents/github_pat.env"
+fi
 
 # ==============================================================================
 # 2. History Control (Translated from Nix)

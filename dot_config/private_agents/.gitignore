@@ -1,0 +1,17 @@
+# Accidental raw secret files.
+# The committed chezmoi file should be:
+#
+#   create_private_github_pat.env.tmpl
+#
+# Never commit a real token file.
+
+github_pat.env
+private_github_pat.env
+encrypted_github_pat.env
+*.env
+
+# Examples are safe if you add one later.
+!*.env.example
+
+# The chezmoi create-template stub is safe to commit.
+!create_private_github_pat.env.tmpl
