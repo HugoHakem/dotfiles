@@ -74,3 +74,8 @@ exposed = { node = "node", npm = "npm", npx = "npx" }
 channels = ["conda-forge"]
 dependencies = { jq = "*" }
 exposed = { jq = "jq" }
+
+[envs.pandoc]
+channels = ["conda-forge"]
+dependencies = { pandoc = "*" }
+exposed = { pandoc = "pandoc", pandoc-lua = "pandoc-lua", pandoc-server = "pandoc-server" }
