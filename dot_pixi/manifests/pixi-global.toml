@@ -79,3 +79,8 @@ exposed = { jq = "jq" }
 channels = ["conda-forge"]
 dependencies = { pandoc = "*" }
 exposed = { pandoc = "pandoc", pandoc-lua = "pandoc-lua", pandoc-server = "pandoc-server" }
+
+[envs.gsutil]
+channels = ["conda-forge"]
+dependencies = { gsutil = "*" }
+exposed = { gsutil = "gsutil" }
