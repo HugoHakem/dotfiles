@@ -84,3 +84,8 @@ exposed = { pandoc = "pandoc", pandoc-lua = "pandoc-lua", pandoc-server = "pando
 channels = ["conda-forge"]
 dependencies = { gsutil = "*" }
 exposed = { gsutil = "gsutil" }
+
+[envs.git-filter-repo]
+channels = ["conda-forge"]
+dependencies = { git-filter-repo = "*" }
+exposed = { git-filter-repo = "git-filter-repo" }
