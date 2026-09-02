@@ -59,6 +59,10 @@ function bathelp() {
   "$@" --help 2>&1 | bat --language=help
 }
 
+copy() {
+  printf "\033]52;c;$(base64 -w0 | tr -d '\n')\a"
+}
+
 # Note: 'export -f bathelp' was removed because Zsh does not support exporting 
 # functions to subshells like Bash does. The function is still globally available in Zsh.
 
