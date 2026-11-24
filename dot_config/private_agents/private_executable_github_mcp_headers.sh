@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-ENV_FILE="${HOME}/.config/agents/github_pat.env"
+ENV_FILE="${HOME}/.config/secrets/github_pat.env"
 
 if [ ! -r "$ENV_FILE" ]; then
   printf '%s\n' "github_mcp_headers.sh: missing readable env file: $ENV_FILE" >&2

@@ -23,12 +23,15 @@ fi
 export PATH="$HOME/.pixi/bin:$PATH"
 # install codex through npm
 export PATH="$PATH:$HOME/.pixi/envs/nodejs/bin"
-# GitHub MCP token for Codex CLI.
-# The token itself lives in ~/.config/agents/github_pat.env,
-# which is created locally and not committed.
-if [ -r "$HOME/.config/agents/github_pat.env" ]; then
-  . "$HOME/.config/agents/github_pat.env"
-fi
+# Secrets in ~/.config/secrets are NOT exported globally; each is loaded only
+# for the process that needs it. Codex reads GITHUB_PAT from its environment
+# (bearer_token_env_var), so load it in a subshell just for codex.
+codex() {
+  (
+    [ -r "$HOME/.config/secrets/github_pat.env" ] && . "$HOME/.config/secrets/github_pat.env"
+    command codex "$@"
+  )
+}
 
 # ==============================================================================
 # 2. History Control (Translated to Zsh)

@@ -1,11 +1,12 @@
 # GitHub MCP authentication for Codex and Claude Code
 
-This directory manages local GitHub MCP authentication material.
+This directory manages the GitHub MCP header helper for Claude Code.
 
-The main target file is:
+The PAT itself lives with the other local secrets (see
+`dot_config/private_secrets/README.md`):
 
 ```txt
-~/.config/agents/github_pat.env
+~/.config/secrets/github_pat.env
 ```
 
 It contains the GitHub PAT used by Codex and Claude Code for GitHub MCP access.
@@ -19,8 +20,12 @@ In the chezmoi source repo:
 
 ```txt
 dot_config/private_agents
-├── create_private_github_pat.env.tmpl
 ├── private_executable_github_mcp_headers.sh
+└── README.md
+
+dot_config/private_secrets
+├── create_private_github_pat.env.tmpl
+├── create_private_mistral_api_key.env.tmpl
 ├── .gitignore
 └── README.md
 ```
@@ -29,29 +34,21 @@ This creates:
 
 ```txt
 ~/.config/agents
-├── github_pat.env
 ├── github_mcp_headers.sh
+└── README.md
+
+~/.config/secrets
+├── github_pat.env
+├── mistral_api_key.env
 └── README.md
 ```
 
 ## Why this layout?
 
-The source directory is named `private_agents`, but the target directory is still:
+The `private_` prefix on both source directories tells chezmoi to remove
+group/world permissions from `~/.config/agents` and `~/.config/secrets`.
 
-```txt
-~/.config/agents
-```
-
-The `private_` prefix tells chezmoi to remove group/world permissions from the
-target directory.
-
-The token file source is named:
-
-```txt
-create_private_github_pat.env.tmpl
-```
-
-This means:
+The token file source is `dot_config/private_secrets/create_private_github_pat.env.tmpl`:
 
 - `create_`: create the target file if missing, but do not overwrite it later
 - `private_`: make the target file private
@@ -60,7 +57,7 @@ This means:
 So the target becomes:
 
 ```txt
-~/.config/agents/github_pat.env
+~/.config/secrets/github_pat.env
 ```
 
 ## First-time setup with chezmoi
@@ -74,7 +71,7 @@ chezmoi apply
 Then edit the target file:
 
 ```sh
-$EDITOR "$HOME/.config/agents/github_pat.env"
+$EDITOR "$HOME/.config/secrets/github_pat.env"
 ```
 
 Replace:
@@ -94,8 +91,8 @@ Do not include `Bearer`.
 Check permissions:
 
 ```sh
-ls -ld "$HOME/.config/agents"
-ls -l "$HOME/.config/agents/github_pat.env"
+ls -ld "$HOME/.config/agents" "$HOME/.config/secrets"
+ls -l "$HOME/.config/secrets/github_pat.env"
 ls -l "$HOME/.config/agents/github_mcp_headers.sh"
 ```
 
@@ -103,7 +100,8 @@ Expected shape:
 
 ```txt
 drwx------ ... ~/.config/agents
--rw------- ... ~/.config/agents/github_pat.env
+drwx------ ... ~/.config/secrets
+-rw------- ... ~/.config/secrets/github_pat.env
 -rwx------ ... ~/.config/agents/github_mcp_headers.sh
 ```
 
@@ -164,15 +162,17 @@ bearer_token_env_var = "GITHUB_PAT"
 
 This stores only the environment variable name, not the token.
 
-In the `.bashrc` or `.zshrc` file, you should add:
+`GITHUB_PAT` is not exported globally. `.bashrc` and `.zshrc` define a `codex`
+wrapper that loads `~/.config/secrets/github_pat.env` in a subshell, so only
+Codex sees the token:
 
 ```sh
-# GitHub MCP token for Codex CLI.
-# The token itself lives in ~/.config/agents/github_pat.env,
-# which is created locally and not committed.
-if [ -r "$HOME/.config/agents/github_pat.env" ]; then
-  . "$HOME/.config/agents/github_pat.env"
-fi
+codex() {
+  (
+    [ -r "$HOME/.config/secrets/github_pat.env" ] && . "$HOME/.config/secrets/github_pat.env"
+    command codex "$@"
+  )
+}
 ```
 
 Inside Codex, verify with:
@@ -216,17 +216,17 @@ Inside Claude Code, verify with:
 Create the directory and env file manually:
 
 ```sh
-mkdir -p "$HOME/.config/agents"
-chmod 700 "$HOME/.config/agents"
+mkdir -p "$HOME/.config/agents" "$HOME/.config/secrets"
+chmod 700 "$HOME/.config/agents" "$HOME/.config/secrets"
 
-cat > "$HOME/.config/agents/github_pat.env" <<'EOF'
-# ~/.config/agents/github_pat.env
+cat > "$HOME/.config/secrets/github_pat.env" <<'EOF'
+# ~/.config/secrets/github_pat.env
 # Raw token only. Do not include "Bearer ".
 export GITHUB_PAT='github_pat_REPLACE_WITH_YOUR_TOKEN'
 EOF
 
-chmod 600 "$HOME/.config/agents/github_pat.env"
-$EDITOR "$HOME/.config/agents/github_pat.env"
+chmod 600 "$HOME/.config/secrets/github_pat.env"
+$EDITOR "$HOME/.config/secrets/github_pat.env"
 ```
 
 Create the Claude Code headers helper manually:
@@ -236,7 +236,7 @@ cat > "$HOME/.config/agents/github_mcp_headers.sh" <<'EOF'
 #!/bin/sh
 set -eu
 
-ENV_FILE="${HOME}/.config/agents/github_pat.env"
+ENV_FILE="${HOME}/.config/secrets/github_pat.env"
 
 if [ ! -r "$ENV_FILE" ]; then
   printf '%s\n' "github_mcp_headers.sh: missing readable env file: $ENV_FILE" >&2
@@ -265,7 +265,7 @@ Then use the same Codex and Claude Code setup sections above.
 Edit the local target file directly:
 
 ```sh
-$EDITOR "$HOME/.config/agents/github_pat.env"
+$EDITOR "$HOME/.config/secrets/github_pat.env"
 ```
 
 Then restart Codex or Claude Code.
@@ -276,9 +276,9 @@ Because the file is managed with chezmoi's `create_` attribute, future
 To recreate the placeholder from scratch:
 
 ```sh
-rm "$HOME/.config/agents/github_pat.env"
+rm "$HOME/.config/secrets/github_pat.env"
 chezmoi apply
-$EDITOR "$HOME/.config/agents/github_pat.env"
+$EDITOR "$HOME/.config/secrets/github_pat.env"
 ```
 
 ## Safety checklist
@@ -286,8 +286,8 @@ $EDITOR "$HOME/.config/agents/github_pat.env"
 - Never commit `github_pat.env`.
 - Never paste the PAT into `~/.codex/config.toml`.
 - Never paste the PAT into Claude's MCP JSON config.
-- Keep `~/.config/agents` private.
-- Keep `~/.config/agents/github_pat.env` private.
+- Keep `~/.config/agents` and `~/.config/secrets` private.
+- Keep `~/.config/secrets/github_pat.env` private.
 - Prefer fine-grained PATs with selected repositories.
 - Use the shortest practical expiration.
 - Rotate immediately if the token is printed, committed, or pasted into logs.
@@ -297,8 +297,8 @@ Before committing:
 ```sh
 chezmoi cd
 git status --short
-git status --ignored --short dot_config/private_agents
+git status --ignored --short dot_config/private_agents dot_config/private_secrets
 ```
 
-The committed files should be the template, helper script, README, and
-`.gitignore`; not a real `github_pat.env`.
+The committed files should be the templates, helper script, READMEs, and
+`.gitignore`; never a real `*.env` file.

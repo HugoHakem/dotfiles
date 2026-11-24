@@ -1,0 +1,5 @@
+# Real secret files must never be committed; only the create_ templates are.
+*.env
+
+# Examples are safe if you add one later.
+!*.env.example
